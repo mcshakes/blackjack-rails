@@ -17,7 +17,7 @@ module Blackjack
       total_value = @cards.sum(&:value)
       aces = @cards.count { |card| card.face == "Ace" }
 
-      if total_value > 21 && aces.positive?
+      while total_value > 21 && aces.positive?
         total_value -= 10
         aces -= 1
       end

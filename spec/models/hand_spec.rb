@@ -96,5 +96,19 @@ RSpec.describe Blackjack::Hand do
         expect(hand.value).to be(21)
       end
     end
+
+    context "when receiving three aces" do
+      let(:second_ace) { Blackjack::Card.new("Ace", "hearts", 11) }
+      let(:third_ace) { Blackjack::Card.new("Ace", "clubs", 11) }
+
+      it "adjusts multiple aces to avoid busting" do
+        hand.add(ace)
+        hand.add(second_ace)
+        hand.add(third_ace)
+        hand.add(nine)
+
+        expect(hand.value).to be(12)
+      end
+    end
   end
 end
