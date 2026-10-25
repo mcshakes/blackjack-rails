@@ -151,4 +151,148 @@ RSpec.describe Blackjack::Game do
       end
     end
   end
+
+  describe "#stand" do
+    let(:king) { Blackjack::Card.new("King", "hearts", 10) }
+    let(:queen) { Blackjack::Card.new("Queen", "clubs", 10) }
+    let(:nine) { Blackjack::Card.new(9, "spades", 9) }
+    let(:eight) { Blackjack::Card.new(8, "clubs", 8) }
+    let(:seven) { Blackjack::Card.new(7, "diamonds", 7) }
+    let(:six) { Blackjack::Card.new(6, "hearts", 6) }
+    let(:five) { Blackjack::Card.new(5, "spades", 5) }
+    let(:two) { Blackjack::Card.new(2, "diamonds", 2) }
+
+    context "when the dealer has less than 17" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [five, seven, king, six, eight])
+      end
+
+      before do
+        game.start
+      end
+
+      it "deals another card to the dealer" do
+        game.stand
+
+        expect(game.dealer_hand.cards.length).to be(3)
+      end
+
+      it "stops dealing once the dealer reaches 17 or higher" do
+        game.stand
+
+        expect(game.dealer_hand.value).to eq(18)
+      end
+    end
+
+    context "when the dealer has 17" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [seven, seven, king, king])
+      end
+
+      before do
+        game.start
+      end
+
+      it "does not deal another card to the dealer" do
+        game.stand
+
+        expect(game.dealer_hand.cards.length).to be(2)
+      end
+    end
+
+    context "when the dealer busts" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [king, six, nine, eight, king])
+      end
+
+      before do
+        game.start
+      end
+
+      it "declares the player the winner" do
+        game.stand
+
+        expect(game.outcome).to eq(:player_wins)
+      end
+
+      it "ends the game" do
+        game.stand
+
+        expect(game.status).to eq(:finished)
+      end
+    end
+
+    context "when the player has a higher score" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [seven, nine, king, king])
+      end
+
+      before do
+        game.start
+      end
+
+      it "declares the player the winner" do
+        game.stand
+
+        expect(game.outcome).to eq(:player_wins)
+      end
+    end
+
+    context "when the dealer has a higher score" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [king, seven, nine, eight])
+      end
+
+      before do
+        game.start
+      end
+
+      it "declares the dealer the winner" do
+        game.stand
+
+        expect(game.outcome).to eq(:dealer_wins)
+      end
+    end
+
+    context "when both hands have equal scores" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [eight, nine, nine, eight])
+      end
+
+      before do
+        game.start
+      end
+
+      it "declares a push" do
+        game.stand
+
+        expect(game.outcome).to eq(:push)
+      end
+    end
+
+    context "when the game has not started" do
+      it "does not allow the player to stand" do
+        expect { game.stand }.to raise_error(
+          RuntimeError, "Game is not active"
+        )
+      end
+    end
+
+    context "when the game has already finished" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [five, seven, eight, king, king])
+      end
+
+      before do
+        game.start
+        game.hit
+      end
+
+      it "does not allow the player to stand" do
+        expect { game.stand }.to raise_error(
+          RuntimeError, "Game is not active"
+        )
+      end
+    end
+  end
 end

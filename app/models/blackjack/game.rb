@@ -34,6 +34,27 @@ module Blackjack
       end
     end
 
+    def stand
+      raise "Game is not active" unless @status == :playing
+
+      while @dealer_hand.value < 17
+        card = @deck.deal
+        @dealer_hand.add(card)
+      end
+
+      if @dealer_hand.bust?
+        @outcome = :player_wins
+      elsif @player_hand.value > @dealer_hand.value
+        @outcome = :player_wins
+      elsif @dealer_hand.value > @player_hand.value
+        @outcome = :dealer_wins
+      else
+        @outcome = :push
+      end
+
+      @status = :finished
+    end
+
 
   end
 end
