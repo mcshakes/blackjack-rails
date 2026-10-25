@@ -1,6 +1,7 @@
 module Blackjack
   class Card
-    attr_reader :face, :suit, :value
+    attr_reader :face, :suit
+    attr_accessor :value
 
     def initialize(face, suit, value)
       @face = face

@@ -23,10 +23,10 @@ module Blackjack
     end
 
     def calculate_value(face)
-      if face.class != Integer
-        face == "Ace" ? 11 : 10
-      else
-        face
+      case face
+      when "Ace" then 11
+      when "Jack", "Queen", "King" then 10
+      else face
       end
     end
   end
