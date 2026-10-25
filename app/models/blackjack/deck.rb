@@ -5,8 +5,8 @@ module Blackjack
 
     attr_reader :cards
 
-    def initialize
-      @cards = build_deck
+    def initialize(cards: nil)
+      @cards = cards || build_deck
     end
 
     def deal
