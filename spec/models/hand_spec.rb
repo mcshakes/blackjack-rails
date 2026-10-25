@@ -111,4 +111,55 @@ RSpec.describe Blackjack::Hand do
       end
     end
   end
+
+  describe "#bust?" do
+    let(:king) { Blackjack::Card.new("King", "hearts", 10) }
+    let(:queen) { Blackjack::Card.new("Queen", "clubs", 10) }
+    let(:five) { Blackjack::Card.new(5, "diamonds", 5) }
+
+    context "when the hand is under 21" do
+      it "returns false" do
+        hand.add(king)
+        hand.add(five)
+
+        expect(hand.bust?).to be(false)
+      end
+    end
+
+    context "when the hand is over 21" do
+      it "returns true" do
+        hand.add(king)
+        hand.add(queen)
+        hand.add(five)
+
+        expect(hand.bust?).to be(true)
+      end
+    end
+  end
+
+  describe "#blackjack?" do
+    let(:ace) { Blackjack::Card.new("Ace", "spades", 11) }
+    let(:king) { Blackjack::Card.new("King", "hearts", 10) }
+    let(:five) { Blackjack::Card.new(5, "diamonds", 5) }
+    let(:six) { Blackjack::Card.new(6, "clubs", 6) }
+
+    context "when the hand contains ace and a face card" do
+      it "returns true" do
+        hand.add(ace)
+        hand.add(king)
+
+        expect(hand.blackjack?).to be(true)
+      end
+    end
+
+    context "when the hand reaches 21 with three cards" do
+      it "returns false" do
+        hand.add(king)
+        hand.add(five)
+        hand.add(six)
+
+        expect(hand.blackjack?).to be(false)
+      end
+    end
+  end
 end

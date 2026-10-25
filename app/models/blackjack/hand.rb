@@ -24,6 +24,18 @@ module Blackjack
 
       total_value
     end
+
+    def bust?
+      value > 21 ? true : false
+    end
+
+    def blackjack?
+      if value == 21 && @cards.length == 2
+        true
+      else
+        false
+      end
+    end
   end
 end
 
