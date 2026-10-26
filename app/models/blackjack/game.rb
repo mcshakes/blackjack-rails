@@ -20,7 +20,7 @@ module Blackjack
         @player_hand.add(@deck.deal)
         @dealer_hand.add(@deck.deal)
       end
-    
+
       if @player_hand.blackjack? && @dealer_hand.blackjack?
         @outcome = :push
       elsif @player_hand.blackjack?
@@ -28,7 +28,7 @@ module Blackjack
       elsif @dealer_hand.blackjack?
         @outcome = :dealer_wins
       end
-    
+
       @status = @outcome ? :finished : :playing
     end
 
