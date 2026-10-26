@@ -61,6 +61,68 @@ RSpec.describe Blackjack::Game do
     end
   end
 
+  describe "#start with natural blackjack" do
+    let(:ace) { Blackjack::Card.new("Ace", "spades", 11) }
+    let(:king) { Blackjack::Card.new("King", "hearts", 10) }
+    let(:queen) { Blackjack::Card.new("Queen", "clubs", 10) }
+    let(:nine) { Blackjack::Card.new(9, "diamonds", 9) }
+    let(:eight) { Blackjack::Card.new(8, "clubs", 8) }
+  
+    context "when the player has blackjack" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [nine, king, eight, ace])
+      end
+  
+      before do
+        game.start
+      end
+  
+      it "declares the player the winner" do
+        expect(game.outcome).to eq(:player_wins)
+      end
+  
+      it "ends the game immediately" do
+        expect(game.status).to eq(:finished)
+      end
+    end
+  
+    context "when the dealer has blackjack" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [king, eight, ace, nine])
+      end
+  
+      before do
+        game.start
+      end
+  
+      it "declares the dealer the winner" do
+        expect(game.outcome).to eq(:dealer_wins)
+      end
+  
+      it "ends the game immediately" do
+        expect(game.status).to eq(:finished)
+      end
+    end
+  
+    context "when both player and dealer have blackjack" do
+      let(:deck) do
+        Blackjack::Deck.new(cards: [queen, king, ace, ace])
+      end
+  
+      before do
+        game.start
+      end
+  
+      it "declares a push" do
+        expect(game.outcome).to eq(:push)
+      end
+  
+      it "ends the game immediately" do
+        expect(game.status).to eq(:finished)
+      end
+    end
+  end
+
   describe "#hit" do
     let(:king) { Blackjack::Card.new("King", "hearts", 10) }
     let(:eight) { Blackjack::Card.new(8, "clubs", 8) }
