@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   root "games#new"
 
-  resource :games, only: [:create, :show] do
+  resource :game, only: [:create, :show] do
     post :hit
     post :stand
   end

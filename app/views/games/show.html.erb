@@ -1,0 +1,28 @@
+<h1>Blackjack</h1>
+
+<h2>Dealer's Hand</h2>
+
+<% @game.dealer_hand.cards.each_with_index do |card, index| %>
+  <% if @game.status == :playing && index == 1 %>
+    <span>[Hidden Card]</span>
+  <% else %>
+    <span><%= card.face %> of <%= card.suit %></span>
+  <% end %>
+<% end %>
+
+<h2>Your Hand</h2>
+
+<% @game.player_hand.cards.each do |card| %>
+  <span><%= card.face %> of <%= card.suit %></span>
+<% end %>
+
+<p>Your score: <%= @game.player_hand.value %></p>
+
+<% if @game.status == :playing %>
+  <%= button_to "Hit", hit_game_path, method: :post %>
+  <%= button_to "Stand", stand_game_path, method: :post %>
+<% else %>
+  <h2>Result: <%= @game.outcome.to_s.humanize %></h2>
+<% end %>
+
+<%= button_to "New Game", game_path, method: :post %>
